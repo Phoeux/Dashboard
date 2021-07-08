@@ -21,7 +21,12 @@ class TaskSerializer(serializers.ModelSerializer):
 
     def validate_start_time(self, data):
         for check in Task.objects.filter(user_id=self.initial_data['user']):
-            if check.start_time.strftime('%Y-%m-%dT%H:%M:%S') < self.initial_data['start_time'] < check.end_time.strftime('%Y-%m-%dT%H:%M:%S'):
+            if check.start_time.strftime('%Y-%m-%dT%H:%M:%SZ') <= self.initial_data['start_time'] or \
+                    self.initial_data['end_time'] <= check.end_time.strftime('%Y-%m-%dT%H:%M:%SZ'):
+                raise serializers.ValidationError(
+                    f'User {check.user} is busy from {check.start_time} up to {check.end_time}')
+            if check.start_time.strftime('%Y-%m-%dT%H:%M:%SZ') >= self.initial_data['start_time'] and self.initial_data[
+                'end_time'] >= check.end_time.strftime('%Y-%m-%dT%H:%M:%SZ'):
                 raise serializers.ValidationError(
                     f'User {check.user} is busy from {check.start_time} up to {check.end_time}')
         return data
