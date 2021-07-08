@@ -24,3 +24,5 @@ class Task(models.Model):
     end_time = models.DateTimeField(default=timezone.now() + timezone.timedelta(hours=1), blank=True)
     stage = models.CharField(max_length=50, choices=Stage.choices, default=Stage.TO_DO)
 
+    def __str__(self):
+        return self.title
