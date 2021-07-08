@@ -34,7 +34,7 @@ class TestAPI(APITestCase):
             "title": "wrong",
             "description": "asdvasdvasdvlyil",
             "start_time": "2021-07-06T11:40:56Z",
-            "end_time": "2021-07-06T12:10:23Z",
+            "end_time": "2021-07-06T12:30:23Z",
             "user": 2
         }
         wrong_data_3 = {
