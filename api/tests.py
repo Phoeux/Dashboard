@@ -23,11 +23,32 @@ class TestAPI(APITestCase):
             "end_time": "2021-07-06T13:24:23Z",
             "user": 2
         }
-        wrong_data = {
+        wrong_data_1 = {
             "title": "wrong",
             "description": "asdvasdvasdvlyil",
             "start_time": "2021-07-06T12:40:56Z",
             "end_time": "2021-07-06T13:10:23Z",
+            "user": 2
+        }
+        wrong_data_2 = {
+            "title": "wrong",
+            "description": "asdvasdvasdvlyil",
+            "start_time": "2021-07-06T11:40:56Z",
+            "end_time": "2021-07-06T12:10:23Z",
+            "user": 2
+        }
+        wrong_data_3 = {
+            "title": "wrong",
+            "description": "asdvasdvasdvlyil",
+            "start_time": "2021-07-06T12:40:56Z",
+            "end_time": "2021-07-06T13:20:23Z",
+            "user": 2
+        }
+        wrong_data_4 = {
+            "title": "wrong",
+            "description": "asdvasdvasdvlyil",
+            "start_time": "2021-07-06T7:40:56Z",
+            "end_time": "2021-07-06T15:20:23Z",
             "user": 2
         }
         """Unauthorized user can't post data"""
@@ -40,8 +61,19 @@ class TestAPI(APITestCase):
         self.assertEqual(self.user.groups.filter(name='manager').values('name')[0]['name'], 'manager')
         self.assertEqual(Task.objects.count(), 1)
         self.assertEqual(Task.objects.get().title, '1')
-        response = self.client.post(url, wrong_data, format='json')
+        """validation check"""
+        response = self.client.post(url, wrong_data_1, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Task.objects.count(), 1)
+        response = self.client.post(url, wrong_data_2, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Task.objects.count(), 1)
+        response = self.client.post(url, wrong_data_3, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Task.objects.count(), 1)
+        response = self.client.post(url, wrong_data_4, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Task.objects.count(), 1)
         self.client.logout()
         """Simple user can't create tasks"""
         self.client.login(username='user2', password='useruser')
